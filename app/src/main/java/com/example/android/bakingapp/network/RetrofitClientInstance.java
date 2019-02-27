@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClientInstance {
     //Base URL for API request
     private static final String MOVIE_DATABASE_URL_POPULAR =
-            "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+            "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/";
 
     private static Retrofit getRetrofitInstance() {
 

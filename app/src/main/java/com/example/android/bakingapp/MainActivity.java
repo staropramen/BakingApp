@@ -3,13 +3,16 @@ package com.example.android.bakingapp;
 import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.example.android.bakingapp.databinding.ActivityMainBinding;
+import com.example.android.bakingapp.fragments.RecipeListFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener{
 
     ActivityMainBinding mBinding;
 
@@ -24,6 +27,52 @@ public class MainActivity extends AppCompatActivity {
         //Setup the Toolbar
         setSupportActionBar(mBinding.toolbar);
         setAppBarHeight();
+
+        //Listen for changes in the back stack
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+        shouldDisplayHomeUp();
+
+        //Handle when activity is recreated like on orientation Change
+        if(savedInstanceState == null){
+            RecipeListFragment fragment = new RecipeListFragment();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.main_content, fragment)
+                    .commit();
+        }
+    }
+
+    //Fragment Navigation
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        shouldDisplayHomeUp();
+    }
+
+    public void shouldDisplayHomeUp(){
+        //Enable Up button only  if there are entries in the back stack
+        boolean canGoBack = getSupportFragmentManager().getBackStackEntryCount()>0;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(canGoBack);
+    }
+
+    @Override
+    public boolean onNavigateUp() {
+        getSupportFragmentManager().popBackStack();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        getSupportFragmentManager().popBackStack();
     }
 
     //Toolbar Sizing
