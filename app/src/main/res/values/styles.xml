@@ -28,4 +28,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ListRecipeName">
+        <item name="android:background">@color/tranparentBlue</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">@dimen/recipe_name_padding</item>
+        <item name="android:textSize">@dimen/recipe_name_text_size</item>
+    </style>
+
 </resources>
