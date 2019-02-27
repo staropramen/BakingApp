@@ -1,8 +1,11 @@
 package com.example.android.bakingapp.model;
 
+import java.io.Serializable;
 import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Recipe {
+public class Recipe implements Serializable {
 
     private String name;
     private List<Ingredient> ingredients;
@@ -37,4 +40,6 @@ public class Recipe {
     public String getImage() {
         return image;
     }
+
+
 }

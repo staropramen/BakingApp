@@ -44,7 +44,8 @@ public class ListViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
-
+                t.printStackTrace();
+                Log.d(TAG, "Api call failed");
             }
         });
     }

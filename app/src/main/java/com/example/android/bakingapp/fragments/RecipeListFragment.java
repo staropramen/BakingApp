@@ -4,12 +4,14 @@ package com.example.android.bakingapp.fragments;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,8 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class RecipeListFragment extends Fragment {
+
+    private static String TAG = RecipeListFragment.class.getSimpleName();
 
     private View rootView;
     private RecyclerView recyclerView;
@@ -45,7 +49,8 @@ public class RecipeListFragment extends Fragment {
 
         //Setup RecyclerView, GridLayoutManager and Adapter
         recyclerView = rootView.findViewById(R.id.rv_all_recipes);
-        gridLayoutManager = new GridLayoutManager(getActivity(), 1);
+        int columnCount = getColumns();
+        gridLayoutManager = new GridLayoutManager(getActivity(), columnCount);
         recyclerView.setLayoutManager(gridLayoutManager);
         adapter = new RecipeListAdapter();
         recyclerView.setAdapter(adapter);
@@ -56,6 +61,7 @@ public class RecipeListFragment extends Fragment {
         return rootView;
     }
 
+    //Setup the ViewModel
     private void setupViewModel(){
         ListViewModel viewModel = ViewModelProviders.of(this).get(ListViewModel.class);
         viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
@@ -65,5 +71,22 @@ public class RecipeListFragment extends Fragment {
             }
         });
     }
+
+    //Get Screen Size to set number of columns for GridLayout
+    private int getColumns(){
+        // DefaultColumn Count is 1
+        int columns = 1;
+        boolean isPhone = getResources().getBoolean(R.bool.isPhone);
+        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
+        if(isPhone && isLandscape){
+            columns = 2;
+        }else if(!isPhone){
+            columns = 3;
+        }
+
+        return columns;
+    }
+
 
 }

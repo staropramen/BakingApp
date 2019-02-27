@@ -2,17 +2,17 @@ package com.example.android.bakingapp.model;
 
 public class Ingredient {
 
-    private int quantity;
+    private double quantity;
     private String measure;
     private String ingrediant;
 
-    public Ingredient(int quantity, String measure, String ingrediant) {
+    public Ingredient(double quantity, String measure, String ingrediant) {
         this.quantity = quantity;
         this.measure = measure;
         this.ingrediant = ingrediant;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 

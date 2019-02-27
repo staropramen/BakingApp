@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -25,7 +24,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     //Constructor
     public RecipeListAdapter() {
-        Log.d(TAG, "Adapter Created");
+
     }
 
     public class RecipeListAdapterViewHolder extends RecyclerView.ViewHolder {
@@ -52,7 +51,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     @Override
     public void onBindViewHolder(@NonNull RecipeListAdapterViewHolder holder, int pos) {
         Recipe recipe = recipes.get(pos);
-        Log.d(TAG, recipe.getName());
+
         holder.mBinding.tvRecipeName.setText(recipe.getName());
         if(TextUtils.isEmpty(recipe.getImage())){
             Picasso.get().load(ImageChooser.getImageResId(recipe.getName())).into(holder.mBinding.ivRecipeImage);
