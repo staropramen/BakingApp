@@ -22,9 +22,15 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     private List<Recipe> recipes;
 
-    //Constructor
-    public RecipeListAdapter() {
+    private final RecipeOnClickHandler recipeOnClickHandler;
 
+    public interface RecipeOnClickHandler {
+        void onClick(Recipe recipe);
+    }
+
+    //Constructor
+    public RecipeListAdapter(RecipeOnClickHandler clickHandler) {
+        this.recipeOnClickHandler = clickHandler;
     }
 
     public class RecipeListAdapterViewHolder extends RecyclerView.ViewHolder {
