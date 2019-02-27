@@ -4,4 +4,5 @@
     <dimen name="appbar_padding_top">0dp</dimen>
     <dimen name="recipe_name_padding">20dp</dimen>
     <dimen name="recipe_name_text_size">20sp</dimen>
+    <dimen name="ingredient_text">18sp</dimen>
 </resources>
