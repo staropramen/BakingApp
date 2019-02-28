@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,10 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
         recyclerView.setLayoutManager(gridLayoutManager);
         adapter = new RecipeListAdapter(this);
         recyclerView.setAdapter(adapter);
+
+        //Set the title
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
 
         //Kick off ViewModel
         setupViewModel();

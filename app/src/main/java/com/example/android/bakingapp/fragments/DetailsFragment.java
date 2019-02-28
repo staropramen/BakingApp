@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,10 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
         //Get the Recipe
         Bundle data = getArguments();
         Recipe recipe = (Recipe) data.getSerializable(RECIPE_KEY);
+
+        //Set the title
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(recipe.getName());
 
         //Get Ingredients an Pop in Recycler View
         List<Ingredient> ingredients = recipe.getIngredients();
