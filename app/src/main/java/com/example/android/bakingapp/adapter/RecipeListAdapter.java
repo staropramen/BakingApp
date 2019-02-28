@@ -4,7 +4,9 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -56,7 +58,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     @Override
     public void onBindViewHolder(@NonNull RecipeListAdapterViewHolder holder, int pos) {
-        Recipe recipe = recipes.get(pos);
+        final Recipe recipe = recipes.get(pos);
 
         holder.mBinding.tvRecipeName.setText(recipe.getName());
         if(TextUtils.isEmpty(recipe.getImage())){
@@ -64,6 +66,17 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         } else {
             Picasso.get().load(recipe.getImage()).into(holder.mBinding.ivRecipeImage);
         }
+
+        holder.mBinding.ivRecipeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    recipeOnClickHandler.onClick(recipe);
+                }catch (ClassCastException e){
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override

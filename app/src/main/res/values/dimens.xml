@@ -5,4 +5,5 @@
     <dimen name="recipe_name_padding">20dp</dimen>
     <dimen name="recipe_name_text_size">20sp</dimen>
     <dimen name="ingredient_text">18sp</dimen>
+    <dimen name="default_margin">16dp</dimen>
 </resources>

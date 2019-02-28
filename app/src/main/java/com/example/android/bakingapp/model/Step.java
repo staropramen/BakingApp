@@ -1,7 +1,12 @@
 package com.example.android.bakingapp.model;
 
-public class Step {
+import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
+public class Step implements Serializable {
+
+    @SerializedName("id")
     private int stepId;
     private String shortDescription;
     private String description;

@@ -1,15 +1,17 @@
 package com.example.android.bakingapp.model;
 
-public class Ingredient {
+import java.io.Serializable;
+
+public class Ingredient implements Serializable {
 
     private double quantity;
     private String measure;
-    private String ingrediant;
+    private String ingredient;
 
-    public Ingredient(double quantity, String measure, String ingrediant) {
+    public Ingredient(double quantity, String measure, String ingredient) {
         this.quantity = quantity;
         this.measure = measure;
-        this.ingrediant = ingrediant;
+        this.ingredient = ingredient;
     }
 
     public double getQuantity() {
@@ -20,7 +22,7 @@ public class Ingredient {
         return measure;
     }
 
-    public String getIngrediant() {
-        return ingrediant;
+    public String getIngredient() {
+        return ingredient;
     }
 }

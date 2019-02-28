@@ -42,7 +42,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
         Ingredient ingredient = ingredients.get(pos);
         String quantity = String.valueOf(ingredient.getQuantity()) + " " + ingredient.getMeasure();
         holder.mBinding.tvQuantity.setText(quantity);
-        holder.mBinding.tvIngredient.setText(ingredient.getIngrediant());
+        holder.mBinding.tvIngredient.setText(ingredient.getIngredient());
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapter.RecipeListAdapter;
+import com.example.android.bakingapp.model.Ingredient;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.viewmodel.ListViewModel;
 
@@ -26,7 +28,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecipeListFragment extends Fragment {
+public class RecipeListFragment extends Fragment implements RecipeListAdapter.RecipeOnClickHandler {
 
     private static String TAG = RecipeListFragment.class.getSimpleName();
 
@@ -35,6 +37,7 @@ public class RecipeListFragment extends Fragment {
     private RecipeListAdapter adapter;
     private GridLayoutManager gridLayoutManager;
 
+    private String RECIPE_KEY = "recipe-key";
 
     public RecipeListFragment() {
         // Required empty public constructor
@@ -52,13 +55,26 @@ public class RecipeListFragment extends Fragment {
         int columnCount = getColumns();
         gridLayoutManager = new GridLayoutManager(getActivity(), columnCount);
         recyclerView.setLayoutManager(gridLayoutManager);
-        adapter = new RecipeListAdapter();
+        adapter = new RecipeListAdapter(this);
         recyclerView.setAdapter(adapter);
 
         //Kick off ViewModel
         setupViewModel();
 
         return rootView;
+    }
+
+    //Setup onClick
+    @Override
+    public void onClick(Recipe recipe) {
+        Bundle data = new Bundle();
+        data.putSerializable(RECIPE_KEY, recipe);
+        DetailsFragment fragment = new DetailsFragment();
+        fragment.setArguments(data);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_content, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     //Setup the ViewModel
@@ -87,6 +103,5 @@ public class RecipeListFragment extends Fragment {
 
         return columns;
     }
-
 
 }
