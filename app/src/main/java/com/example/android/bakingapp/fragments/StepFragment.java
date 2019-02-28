@@ -22,6 +22,7 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -41,7 +42,7 @@ import java.net.URLConnection;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StepFragment extends Fragment implements ExoPlayer.EventListener {
+public class StepFragment extends Fragment implements Player.EventListener {
 
     private static String TAG = StepFragment.class.getSimpleName();
     private View rootView;
@@ -56,8 +57,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     public StepFragment() {
         // Required empty public constructor
     }
-
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -99,13 +99,11 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         return rootView;
     }
 
-    //Release ExoPlayer if Fragment is destroyed
+    //Release ExoPlayer if Fragment is paused
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(playerIsInitialized){
-            releasePlayer();
-        }
+    public void onPause() {
+        super.onPause();
+        releasePlayer();
     }
 
     //Build the Title for Step
@@ -128,20 +126,24 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
             LoadControl loadControl = new DefaultLoadControl();
             exoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector, loadControl);
             mBinding.playerView.setPlayer(exoPlayer);
+            exoPlayer.addListener(this);
             String userAgent = Util.getUserAgent(getActivity(), EXO_VIDEO_PLAYER);
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getActivity(), userAgent), new DefaultExtractorsFactory(), null, null);
             exoPlayer.prepare(mediaSource);
-            exoPlayer.setPlayWhenReady(true);
+            exoPlayer.setPlayWhenReady(false);
         }
 
     }
 
-    //Relese Media Player
+    //Release Media Player
     private void releasePlayer(){
-        exoPlayer.stop();
-        exoPlayer.release();
-        exoPlayer = null;
+        if(playerIsInitialized){
+            exoPlayer.stop();
+            exoPlayer.release();
+            exoPlayer = null;
+            playerIsInitialized = false;
+        }
     }
 
     //Check type of file in thumbnail
@@ -154,8 +156,9 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         return mimeType != null && mimeType.startsWith("image");
     }
 
+    //Exo Player Events
     @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
+    public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
 
     }
 
@@ -166,15 +169,19 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
 
     @Override
     public void onLoadingChanged(boolean isLoading) {
+        if(isLoading){
+            //Hide Player while loading
+            mBinding.playerView.setVisibility(View.INVISIBLE);
+        }else {
+            //Show Player on lOade completed
+            mBinding.playerView.setVisibility(View.VISIBLE);
+        }
 
     }
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        //Hide the View as long is buffering
-        if(playbackState == ExoPlayer.STATE_READY){
-            mBinding.playerView.setVisibility(View.VISIBLE);
-        }
+
     }
 
     @Override
@@ -189,7 +196,8 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
-
+        //Hide the Player if ther is an Error
+        mBinding.playerView.setVisibility(View.GONE);
     }
 
     @Override
