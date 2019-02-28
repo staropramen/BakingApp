@@ -50,7 +50,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.StepLi
     @Override
     public void onBindViewHolder(@NonNull StepListAdapter.StepListAdapterViewHolder holder, int pos) {
         Resources res = holder.itemView.getContext().getResources();
-        Step step = steps.get(pos);
+        final Step step = steps.get(pos);
         int stepNumber = step.getStepId();
         String stepNumberString;
         if(stepNumber == 0){
@@ -60,6 +60,17 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.StepLi
         }
         holder.mBinding.tvStepName.setText(stepNumberString);
         holder.mBinding.tvStepDescription.setText(step.getShortDescription());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+                    stepOnClickHandler.onClick(step);
+                }catch (ClassCastException e){
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override

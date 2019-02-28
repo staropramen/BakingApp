@@ -3,6 +3,7 @@ package com.example.android.bakingapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
     private RecyclerView stepsRecyclerView;
     private StepListAdapter stepAdapter;
     private String RECIPE_KEY = "recipe-key";
+    private String STEP_KEY = "step-key";
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -56,8 +58,6 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
         Bundle data = getArguments();
         Recipe recipe = (Recipe) data.getSerializable(RECIPE_KEY);
 
-        Log.d(TAG, recipe.getIngredients().toString());
-
         //Get Ingredients an Pop in Recycler View
         List<Ingredient> ingredients = recipe.getIngredients();
         ingredientsAdapter.setIngredients(ingredients);
@@ -73,6 +73,13 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
 
     @Override
     public void onClick(Step step) {
-
+        Bundle data = new Bundle();
+        data.putSerializable(STEP_KEY, step);
+        StepFragment fragment = new StepFragment();
+        fragment.setArguments(data);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_content, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
