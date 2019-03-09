@@ -21,7 +21,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.StepLi
     private final StepOnClickHandler stepOnClickHandler;
 
     public interface StepOnClickHandler {
-        void onClick(Step step);
+        void onClick(List<Step> steps, int position);
     }
 
     //Constructor
@@ -48,7 +48,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.StepLi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StepListAdapter.StepListAdapterViewHolder holder, int pos) {
+    public void onBindViewHolder(@NonNull StepListAdapter.StepListAdapterViewHolder holder, final int pos) {
         Resources res = holder.itemView.getContext().getResources();
         final Step step = steps.get(pos);
         int stepNumber = step.getStepId();
@@ -65,7 +65,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.StepLi
             @Override
             public void onClick(View view) {
                 try{
-                    stepOnClickHandler.onClick(step);
+                    stepOnClickHandler.onClick(steps, pos);
                 }catch (ClassCastException e){
                     e.printStackTrace();
                 }

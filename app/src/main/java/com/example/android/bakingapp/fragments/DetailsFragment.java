@@ -19,6 +19,8 @@ import com.example.android.bakingapp.model.Ingredient;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.model.Step;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +37,7 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
     private StepListAdapter stepAdapter;
     private String RECIPE_KEY = "recipe-key";
     private String STEP_KEY = "step-key";
+    private String POSITION_KEY = "position-key";
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -77,9 +80,10 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
     }
 
     @Override
-    public void onClick(Step step) {
+    public void onClick(List<Step> steps, int position) {
         Bundle data = new Bundle();
-        data.putSerializable(STEP_KEY, step);
+        data.putSerializable(STEP_KEY, (Serializable)steps);
+        data.putInt(POSITION_KEY, position);
         StepFragment fragment = new StepFragment();
         fragment.setArguments(data);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

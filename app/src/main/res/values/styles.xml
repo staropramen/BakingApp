@@ -46,4 +46,10 @@
         <item name="android:textSize">@dimen/ingredient_text</item>
     </style>
 
+    <style name="StepDescription">
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textSize">@dimen/step_description_text_size</item>
+        <item name="android:padding">@dimen/step_description_padding</item>
+    </style>
+
 </resources>

@@ -36,7 +36,9 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.net.URLConnection;
+import java.util.List;
 
 
 /**
@@ -48,8 +50,11 @@ public class StepFragment extends Fragment implements Player.EventListener {
     private View rootView;
     private FragmentStepBinding mBinding;
     private String STEP_KEY = "step-key";
+    private String POSITION_KEY = "position-key";
     private SimpleExoPlayer exoPlayer;
     private String EXO_VIDEO_PLAYER = "exoVideoPlayer";
+    private List<Step> steps;
+    private int position;
 
     //Boolean to check if the Player is initialized, default = false
     private boolean playerIsInitialized = false;
@@ -57,7 +62,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
     public StepFragment() {
         // Required empty public constructor
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,33 +73,31 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
         //Get the Step
         Bundle data = getArguments();
-        Step step = (Step) data.getSerializable(STEP_KEY);
+        steps = (List<Step>) data.getSerializable(STEP_KEY);
+        position = data.getInt(POSITION_KEY);
+        Step step = steps.get(position);
 
-        //Set the title
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(getStepTitle(step));
+        //Populate the UI
+        populateUi(step);
 
-        //Initialize Exoplayer if there is a media source
-        if(!TextUtils.isEmpty(step.getVideoURL())){
-            Uri mediaUri = Uri.parse(step.getVideoURL());
-            initializePlayer(mediaUri);
-        } else {
-            mBinding.playerView.setVisibility(View.GONE);
-            //Load thumbnail instead of video
-            mBinding.ivThumbnail.setVisibility(View.VISIBLE);
-            if(!TextUtils.isEmpty(step.getThumbnailURL()) && isImageFile(step.getThumbnailURL())){
-                Uri thumbnailUri = Uri.parse(step.getThumbnailURL());
-                Picasso.get().load(thumbnailUri).into(mBinding.ivThumbnail);
-            } else if(isVideoFile(step.getThumbnailURL())) {
-                mBinding.playerView.setVisibility(View.VISIBLE);
-                mBinding.ivThumbnail.setVisibility(View.GONE);
-                Uri mediaUri = Uri.parse(step.getThumbnailURL());
-                initializePlayer(mediaUri);
-            }else{
-                Picasso.get().load(R.drawable.default_thumbnail).into(mBinding.ivThumbnail);
+        setVisibilityOfPreviousAndNext(position, steps);
+
+        //Set onClick for previous and next
+        mBinding.ivPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                position--;
+                previousStep(position, steps);
             }
-        }
+        });
 
+        mBinding.ivNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                position++;
+                nextStep(position, steps);
+            }
+        });
 
         return rootView;
     }
@@ -116,6 +119,31 @@ public class StepFragment extends Fragment implements Player.EventListener {
             stepNumberString = getString(R.string.step) + " " + String.valueOf(stepNumber);
         }
         return stepNumberString;
+    }
+
+    //Check if there is a video and launch Exoplaxer
+    private void checkForVideo(Step step){
+        //Initialize ExoPlayer if there is a media source
+        if(!TextUtils.isEmpty(step.getVideoURL())){
+            Uri mediaUri = Uri.parse(step.getVideoURL());
+            initializePlayer(mediaUri);
+            mBinding.ivThumbnail.setVisibility(View.GONE);
+        } else {
+            mBinding.playerView.setVisibility(View.GONE);
+            //Load thumbnail instead of video
+            mBinding.ivThumbnail.setVisibility(View.VISIBLE);
+            if(!TextUtils.isEmpty(step.getThumbnailURL()) && isImageFile(step.getThumbnailURL())){
+                Uri thumbnailUri = Uri.parse(step.getThumbnailURL());
+                Picasso.get().load(thumbnailUri).into(mBinding.ivThumbnail);
+            } else if(isVideoFile(step.getThumbnailURL())) {
+                mBinding.playerView.setVisibility(View.VISIBLE);
+                mBinding.ivThumbnail.setVisibility(View.GONE);
+                Uri mediaUri = Uri.parse(step.getThumbnailURL());
+                initializePlayer(mediaUri);
+            }else{
+                Picasso.get().load(R.drawable.default_thumbnail).into(mBinding.ivThumbnail);
+            }
+        }
     }
 
     //Initialize Exo Player Method
@@ -146,6 +174,45 @@ public class StepFragment extends Fragment implements Player.EventListener {
         }
     }
 
+    //Populate the Ui
+    private void populateUi(Step step){
+        //Set the title
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(getStepTitle(step));
+        mBinding.stepShortDescription.setText(step.getShortDescription());
+        mBinding.stepDescription.setText(step.getDescription());
+        checkForVideo(step);
+    }
+
+    //Check position and set visibility of previous/next
+    private void setVisibilityOfPreviousAndNext(int position, List<Step> steps){
+        if(position == 0){
+            mBinding.ivPrevious.setVisibility(View.INVISIBLE);
+            mBinding.ivNext.setVisibility(View.VISIBLE);
+        } else if(position == steps.size() -1){
+            mBinding.ivPrevious.setVisibility(View.VISIBLE);
+            mBinding.ivNext.setVisibility(View.INVISIBLE);
+        } else {
+            mBinding.ivPrevious.setVisibility(View.VISIBLE);
+            mBinding.ivNext.setVisibility(View.VISIBLE);
+        }
+    }
+
+    //Set the Button OnClick Actions
+    private void nextStep(int position, List<Step> steps){
+        releasePlayer();
+        Step step = steps.get(position);
+        populateUi(step);
+        setVisibilityOfPreviousAndNext(position, steps);
+    }
+
+    private void previousStep(int position, List<Step> steps){
+        releasePlayer();
+        Step step = steps.get(position);
+        populateUi(step);
+        setVisibilityOfPreviousAndNext(position, steps);
+    }
+
     //Check type of file in thumbnail
     public static boolean isVideoFile(String path) {
         String mimeType = URLConnection.guessContentTypeFromName(path);
@@ -172,9 +239,11 @@ public class StepFragment extends Fragment implements Player.EventListener {
         if(isLoading){
             //Hide Player while loading
             mBinding.playerView.setVisibility(View.INVISIBLE);
+            mBinding.pbVideoLoading.setVisibility(View.VISIBLE);
         }else {
             //Show Player on lOade completed
             mBinding.playerView.setVisibility(View.VISIBLE);
+            mBinding.pbVideoLoading.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -196,7 +265,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
-        //Hide the Player if ther is an Error
+        //Hide the Player if there is an Error
         mBinding.playerView.setVisibility(View.GONE);
     }
 
