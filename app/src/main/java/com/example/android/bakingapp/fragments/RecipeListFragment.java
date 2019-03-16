@@ -64,6 +64,9 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
 
+        //Set up the Tablet layout (Check for Tablet is inside utils function)
+        DeviceUtils.setUpTabletLayout(false);
+
         //Kick off ViewModel
         setupViewModel();
 

@@ -68,6 +68,9 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(recipe.getName());
 
+        //Set up the Tablet layout (Check for Tablet is inside utils function)
+        DeviceUtils.setUpTabletLayout(true);
+
         //Pop up recycler views
         setupRecyclerViews();
 

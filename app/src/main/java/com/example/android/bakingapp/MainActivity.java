@@ -1,5 +1,6 @@
 package com.example.android.bakingapp;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -27,14 +28,16 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
     ActivityMainBinding mBinding;
     public static Context context;
+    public static Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Setup Context to use in non activiy class
+        //Setup Context and Activity to use in non activiy class
         context = this;
+        activity = this;
 
         //Setup Data Binding
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
