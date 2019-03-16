@@ -2,6 +2,7 @@ package com.example.android.bakingapp;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -25,11 +26,15 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener{
 
     ActivityMainBinding mBinding;
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Setup Context to use in non activiy class
+        context = this;
 
         //Setup Data Binding
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);

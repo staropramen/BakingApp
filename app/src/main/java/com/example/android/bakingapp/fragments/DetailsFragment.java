@@ -18,6 +18,7 @@ import com.example.android.bakingapp.adapter.StepListAdapter;
 import com.example.android.bakingapp.model.Ingredient;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.model.Step;
+import com.example.android.bakingapp.utils.DeviceUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
     private String RECIPE_KEY = "recipe-key";
     private String STEP_KEY = "step-key";
     private String POSITION_KEY = "position-key";
+    private Recipe recipe;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -60,12 +62,30 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
 
         //Get the Recipe
         Bundle data = getArguments();
-        Recipe recipe = (Recipe) data.getSerializable(RECIPE_KEY);
+        recipe = (Recipe) data.getSerializable(RECIPE_KEY);
 
         //Set the title
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(recipe.getName());
 
+        //Pop up recycler views
+        setupRecyclerViews();
+
+        //If Device is tablet, initial show Introduction step
+        if(!DeviceUtils.isPhone){
+            tabletFragmentTransaction(recipe.getSteps(), 0);
+        }
+
+        return rootView;
+    }
+
+    @Override
+    public void onClick(List<Step> steps, int position) {
+        phoneFragmentTransaction(steps, position);
+    }
+
+    //Setup recycler views
+    private void setupRecyclerViews(){
         //Get Ingredients an Pop in Recycler View
         List<Ingredient> ingredients = recipe.getIngredients();
         ingredientsAdapter.setIngredients(ingredients);
@@ -75,12 +95,10 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
         List<Step> steps = recipe.getSteps();
         stepAdapter.setSteps(steps);
         stepsRecyclerView.setAdapter(stepAdapter);
-
-        return rootView;
     }
 
-    @Override
-    public void onClick(List<Step> steps, int position) {
+    //Fragment Transaction for Phone
+    private void phoneFragmentTransaction(List<Step> steps, int position){
         Bundle data = new Bundle();
         data.putSerializable(STEP_KEY, (Serializable)steps);
         data.putInt(POSITION_KEY, position);
@@ -88,6 +106,19 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
         fragment.setArguments(data);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_content, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    //Fragment Transaction for Tablet
+    private void tabletFragmentTransaction(List<Step> steps, int position){
+        Bundle data = new Bundle();
+        data.putSerializable(STEP_KEY, (Serializable)steps);
+        data.putInt(POSITION_KEY, position);
+        StepFragment fragment = new StepFragment();
+        fragment.setArguments(data);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.tab_content, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

@@ -22,6 +22,7 @@ import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapter.RecipeListAdapter;
 import com.example.android.bakingapp.model.Ingredient;
 import com.example.android.bakingapp.model.Recipe;
+import com.example.android.bakingapp.utils.DeviceUtils;
 import com.example.android.bakingapp.viewmodel.ListViewModel;
 
 import java.util.List;
@@ -97,12 +98,10 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
     private int getColumns(){
         // DefaultColumn Count is 1
         int columns = 1;
-        boolean isPhone = getResources().getBoolean(R.bool.isPhone);
-        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-        if(isPhone && isLandscape){
+        if(DeviceUtils.isPhone && DeviceUtils.isLandscape()){
             columns = 2;
-        }else if(!isPhone){
+        }else if(!DeviceUtils.isPhone){
             columns = 3;
         }
 
