@@ -5,17 +5,23 @@ import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
+import com.example.android.bakingapp.MainActivity;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.databinding.FragmentStepBinding;
 import com.example.android.bakingapp.model.Step;
+import com.example.android.bakingapp.utils.DeviceUtils;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -78,26 +84,29 @@ public class StepFragment extends Fragment implements Player.EventListener {
         Step step = steps.get(position);
 
         //Populate the UI
-        populateUi(step);
+        if(DeviceUtils.isPhone && DeviceUtils.isLandscape()){
+            populateUiLandscape(step);
+        }else {
+            populateUi(step);
+            setVisibilityOfPreviousAndNext(position, steps);
 
-        setVisibilityOfPreviousAndNext(position, steps);
+            //Set onClick for previous and next
+            mBinding.ivPrevious.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    position--;
+                    previousStep(position, steps);
+                }
+            });
 
-        //Set onClick for previous and next
-        mBinding.ivPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                position--;
-                previousStep(position, steps);
-            }
-        });
-
-        mBinding.ivNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                position++;
-                nextStep(position, steps);
-            }
-        });
+            mBinding.ivNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    position++;
+                    nextStep(position, steps);
+                }
+            });
+        }
 
         return rootView;
     }
@@ -107,6 +116,16 @@ public class StepFragment extends Fragment implements Player.EventListener {
     public void onPause() {
         super.onPause();
         releasePlayer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //If Phone and Landscape we hide the Actonabar and the Appbar Layout to have a Full Screen Video
+        if(DeviceUtils.isPhone && DeviceUtils.isLandscape()){
+            ((MainActivity)getActivity()).getSupportActionBar().hide();
+            MainActivity.appBar.setVisibility(View.GONE);
+        }
     }
 
     //Build the Title for Step
@@ -181,6 +200,11 @@ public class StepFragment extends Fragment implements Player.EventListener {
         toolbar.setTitle(getStepTitle(step));
         mBinding.stepShortDescription.setText(step.getShortDescription());
         mBinding.stepDescription.setText(step.getDescription());
+        checkForVideo(step);
+    }
+
+    //Populate Ui for Phone in Landscape
+    private void populateUiLandscape(Step step){
         checkForVideo(step);
     }
 

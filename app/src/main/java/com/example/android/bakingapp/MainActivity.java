@@ -8,32 +8,54 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.example.android.bakingapp.adapter.RecipeListAdapter;
 import com.example.android.bakingapp.databinding.ActivityMainBinding;
 import com.example.android.bakingapp.fragments.RecipeListFragment;
+import com.example.android.bakingapp.fragments.StepFragment;
 import com.example.android.bakingapp.model.Recipe;
+import com.example.android.bakingapp.utils.DeviceUtils;
 import com.example.android.bakingapp.viewmodel.ListViewModel;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener{
 
+    private static String TAG = MainActivity.class.getSimpleName();
     ActivityMainBinding mBinding;
     public static Context context;
     public static Activity activity;
+    public static AppBarLayout appBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //If in StepFragment, Phone and Landscape we want full screen and no status bar for video
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.main_content);
+        if(f instanceof StepFragment){
+            if(DeviceUtils.isPhone && DeviceUtils.isLandscape()){
+                requestWindowFeature(Window.FEATURE_NO_TITLE);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            }
+        }
+
         setContentView(R.layout.activity_main);
+
+
 
         //Setup Context and Activity to use in non activiy class
         context = this;
@@ -45,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         //Setup the Toolbar
         setSupportActionBar(mBinding.toolbar);
         setAppBarHeight();
+
+        //App Bar
+        appBar = mBinding.appbar;
 
         //Listen for changes in the back stack
         getSupportFragmentManager().addOnBackStackChangedListener(this);
