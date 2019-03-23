@@ -38,6 +38,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
@@ -125,6 +126,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
         if(DeviceUtils.isPhone && DeviceUtils.isLandscape()){
             ((MainActivity)getActivity()).getSupportActionBar().hide();
             MainActivity.appBar.setVisibility(View.GONE);
+            mBinding.playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
         }
     }
 
