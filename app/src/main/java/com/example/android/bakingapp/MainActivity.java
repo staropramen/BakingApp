@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     public static Context context;
     public static Activity activity;
     public static AppBarLayout appBar;
+    public static SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +59,10 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
 
 
-        //Setup Context and Activity to use in non activiy class
+        //Setup Context, Preferences and Activity to use in non activiy class
         context = this;
         activity = this;
+        preferences = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
 
         //Setup Data Binding
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);

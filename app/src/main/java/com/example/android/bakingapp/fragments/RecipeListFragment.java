@@ -23,6 +23,7 @@ import com.example.android.bakingapp.adapter.RecipeListAdapter;
 import com.example.android.bakingapp.model.Ingredient;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.utils.DeviceUtils;
+import com.example.android.bakingapp.utils.PreferenceUtils;
 import com.example.android.bakingapp.viewmodel.ListViewModel;
 
 import java.util.List;
@@ -76,6 +77,10 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
     //Setup onClick
     @Override
     public void onClick(Recipe recipe) {
+        //Save clicked Recipe to Shared Prefs
+        PreferenceUtils.saveRecipeToSharedPreferences(recipe);
+
+        //Make fragment transaction
         Bundle data = new Bundle();
         data.putSerializable(RECIPE_KEY, recipe);
         DetailsFragment fragment = new DetailsFragment();
