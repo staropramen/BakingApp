@@ -52,7 +52,7 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
-        
+
         //Prepare Adapter and RecyclerView
         ingredientsRecyclerView = rootView.findViewById(R.id.rv_ingredients);
         ingredientsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

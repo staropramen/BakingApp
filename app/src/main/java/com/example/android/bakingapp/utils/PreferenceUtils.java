@@ -23,4 +23,9 @@ public class PreferenceUtils {
         Recipe recipe = gson.fromJson(json, Recipe.class);
         return recipe;
     }
+
+    public static boolean hasSharedPrefecrences(){
+        boolean hasPrefs = MainActivity.preferences.contains(RECIPE_KEY);
+        return hasPrefs;
+    }
 }

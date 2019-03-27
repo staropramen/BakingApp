@@ -1,9 +1,12 @@
 package com.example.android.bakingapp.fragments;
 
 
+import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.bakingapp.BakingWidgetProvider;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapter.RecipeListAdapter;
 import com.example.android.bakingapp.model.Ingredient;
@@ -80,6 +84,8 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
         //Save clicked Recipe to Shared Prefs
         PreferenceUtils.saveRecipeToSharedPreferences(recipe);
 
+        updateWidget();
+
         //Make fragment transaction
         Bundle data = new Bundle();
         data.putSerializable(RECIPE_KEY, recipe);
@@ -89,6 +95,16 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
         transaction.replace(R.id.main_content, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    //Update the widget
+    private void updateWidget(){
+        Intent intent = new Intent(getActivity(), BakingWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getActivity().getApplication())
+                .getAppWidgetIds(new ComponentName(getActivity().getApplication(), BakingWidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        getActivity().sendBroadcast(intent);
     }
 
     //Setup the ViewModel

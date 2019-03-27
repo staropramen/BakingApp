@@ -14,4 +14,12 @@
         android:textColor="@color/white"
         android:textSize="@dimen/recipe_name_text_size" />
 
+    <TextView
+        android:id="@+id/test_intent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@color/white"
+        android:text="Click Me"
+        android:padding="@dimen/recipe_name_padding"/>
+
 </LinearLayout>

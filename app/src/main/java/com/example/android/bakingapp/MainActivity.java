@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,10 +27,12 @@ import android.view.WindowManager;
 
 import com.example.android.bakingapp.adapter.RecipeListAdapter;
 import com.example.android.bakingapp.databinding.ActivityMainBinding;
+import com.example.android.bakingapp.fragments.DetailsFragment;
 import com.example.android.bakingapp.fragments.RecipeListFragment;
 import com.example.android.bakingapp.fragments.StepFragment;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.utils.DeviceUtils;
+import com.example.android.bakingapp.utils.PreferenceUtils;
 import com.example.android.bakingapp.viewmodel.ListViewModel;
 
 import java.util.List;
@@ -41,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     public static Activity activity;
     public static AppBarLayout appBar;
     public static SharedPreferences preferences;
+
+    private String WIDGET_INTENT = "widget-intent";
+    private String RECIPE_KEY = "recipe-key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         }
 
         setContentView(R.layout.activity_main);
-
-
 
         //Setup Context, Preferences and Activity to use in non activiy class
         context = this;
@@ -87,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
                     .add(R.id.main_content, fragment)
                     .commit();
         }
+
+        //Check for Intent coming from Widget
+        checkForWidgetIntent();
     }
 
     //Fragment Navigation
@@ -140,5 +148,23 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
                 .getDisplayMetrics()
                 .density;
         return Math.round((float) dp * density);
+    }
+
+    private void checkForWidgetIntent() {
+        Intent i = getIntent();
+
+        if(i != null && i.hasExtra(WIDGET_INTENT)){
+            //If Intent comes from Widget,
+            //make Fragment Tranaction to come to Details
+            Recipe recipe = PreferenceUtils.getRecipeFromSharedPreferences();
+            Bundle data = new Bundle();
+            data.putSerializable(RECIPE_KEY, recipe);
+            DetailsFragment fragment = new DetailsFragment();
+            fragment.setArguments(data);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.main_content, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 }

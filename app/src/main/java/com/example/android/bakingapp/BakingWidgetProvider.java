@@ -1,22 +1,48 @@
 package com.example.android.bakingapp;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.util.Log;
 import android.widget.RemoteViews;
+
+import com.example.android.bakingapp.model.Recipe;
+import com.example.android.bakingapp.utils.PreferenceUtils;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class BakingWidgetProvider extends AppWidgetProvider {
 
+    private static String TAG = BakingWidgetProvider.class.getSimpleName();
+    private static String WIDGET_INTENT = "widget-intent";
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_widget_provider);
-        views.setTextViewText(R.id.widget_tv_recipe_name, widgetText);
+
+        //Create Intent to launch the App
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(WIDGET_INTENT, true);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        views.setOnClickPendingIntent(R.id.test_intent, pendingIntent);
+
+        //Get Recipe
+        String recipeName;
+        if (PreferenceUtils.hasSharedPrefecrences()){
+            Recipe recipe = PreferenceUtils.getRecipeFromSharedPreferences();
+            recipeName = recipe.getName();
+        } else {
+            recipeName = Resources.getSystem().getString(R.string.default_widget_text);
+        }
+
+        views.setTextViewText(R.id.widget_tv_recipe_name, recipeName);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
