@@ -50,7 +50,6 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

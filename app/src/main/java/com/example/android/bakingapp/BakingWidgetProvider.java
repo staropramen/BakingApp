@@ -7,10 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.RemoteViews;
 
+import com.example.android.bakingapp.adapter.RecipeListAdapter;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.utils.PreferenceUtils;
+
+import service.IngredientsListService;
 
 /**
  * Implementation of App Widget functionality.
@@ -31,13 +35,16 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         intent.putExtra(WIDGET_INTENT, true);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        views.setOnClickPendingIntent(R.id.test_intent, pendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_tv_recipe_name, pendingIntent);
 
         //Get Recipe
         String recipeName;
         if (PreferenceUtils.hasSharedPrefecrences()){
             Recipe recipe = PreferenceUtils.getRecipeFromSharedPreferences();
             recipeName = recipe.getName();
+
+            Intent serviceIntent = new Intent(context, IngredientsListService.class);
+            views.setRemoteAdapter(R.id.lv_ingredients, serviceIntent);
         } else {
             recipeName = Resources.getSystem().getString(R.string.default_widget_text);
         }
