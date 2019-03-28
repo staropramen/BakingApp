@@ -31,7 +31,7 @@ class IngredientsListViewsFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void onCreate() {
-
+        Log.d(TAG, "ON CREATE SERVICE");
     }
 
     @Override
@@ -63,7 +63,7 @@ class IngredientsListViewsFactory implements RemoteViewsService.RemoteViewsFacto
         views.setTextViewText(R.id.tv_widget_ingredient, ingredientString);
 
         Intent intent = new Intent();
-        intent.putExtra(RECIPE_KEY, recipe);
+        intent.putExtra(RECIPE_KEY, ingredientString);
         views.setOnClickFillInIntent(R.id.tv_widget_ingredient, intent);
 
         return views;

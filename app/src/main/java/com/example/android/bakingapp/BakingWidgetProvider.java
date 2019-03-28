@@ -52,6 +52,7 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         views.setTextViewText(R.id.widget_tv_recipe_name, recipeName);
 
         // Instruct the widget manager to update the widget
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lv_ingredients);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
