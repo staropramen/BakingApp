@@ -12,4 +12,12 @@
 
     </android.support.v7.widget.RecyclerView>
 
+    <TextView
+        android:id="@+id/tv_no_connection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/no_internet"
+        android:visibility="invisible"
+        style="@style/ListRecipeName"/>
+
 </FrameLayout>

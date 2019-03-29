@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Baking App</string>
 
+    <string name="no_internet">You device is not connected to the internet. Please connect and try again.</string>
+
     <!-- Details -->
     <string name="ingredients">Ingredients:</string>
     <string name="preparation">Preparation:</string>

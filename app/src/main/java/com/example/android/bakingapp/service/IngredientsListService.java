@@ -1,4 +1,4 @@
-package service;
+package com.example.android.bakingapp.service;
 
 import android.content.Context;
 import android.content.Intent;

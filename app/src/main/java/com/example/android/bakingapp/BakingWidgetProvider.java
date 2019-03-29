@@ -6,15 +6,12 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.util.Log;
-import android.widget.ListView;
 import android.widget.RemoteViews;
 
-import com.example.android.bakingapp.adapter.RecipeListAdapter;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.utils.PreferenceUtils;
 
-import service.IngredientsListService;
+import com.example.android.bakingapp.service.IngredientsListService;
 
 /**
  * Implementation of App Widget functionality.

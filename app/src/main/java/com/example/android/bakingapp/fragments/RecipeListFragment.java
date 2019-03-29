@@ -20,12 +20,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.android.bakingapp.BakingWidgetProvider;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapter.RecipeListAdapter;
 import com.example.android.bakingapp.model.Ingredient;
 import com.example.android.bakingapp.model.Recipe;
+import com.example.android.bakingapp.utils.ConnectivityUtils;
 import com.example.android.bakingapp.utils.DeviceUtils;
 import com.example.android.bakingapp.utils.PreferenceUtils;
 import com.example.android.bakingapp.viewmodel.ListViewModel;
@@ -41,6 +43,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
 
     private View rootView;
     private RecyclerView recyclerView;
+    private TextView noConnectionText;
     private RecipeListAdapter adapter;
     private GridLayoutManager gridLayoutManager;
 
@@ -55,6 +58,8 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
+
+        noConnectionText = rootView.findViewById(R.id.tv_no_connection);
 
         //Setup RecyclerView, GridLayoutManager and Adapter
         recyclerView = rootView.findViewById(R.id.rv_all_recipes);
@@ -71,8 +76,16 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
         //Set up the Tablet layout (Check for Tablet is inside utils function)
         DeviceUtils.setUpTabletLayout(false);
 
-        //Kick off ViewModel
-        setupViewModel();
+        if(ConnectivityUtils.isOnline(getActivity().getApplicationContext())){
+            //Kick off ViewModel if Device is connected to internet
+            noConnectionText.setVisibility(View.INVISIBLE);
+            setupViewModel();
+        }else {
+            recyclerView.setVisibility(View.INVISIBLE);
+            noConnectionText.setVisibility(View.VISIBLE);
+        }
+
+
 
         return rootView;
     }
