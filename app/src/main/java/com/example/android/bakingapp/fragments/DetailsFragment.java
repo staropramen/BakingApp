@@ -1,6 +1,7 @@
 package com.example.android.bakingapp.fragments;
 
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -69,9 +70,6 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(recipe.getName());
 
-        //Set up the Tablet layout (Check for Tablet is inside utils function)
-        DeviceUtils.setUpTabletLayout(true);
-
         //Pop up recycler views
         setupRecyclerViews();
 
@@ -84,8 +82,18 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.d(TAG, "CONFIG CHANGE");
+    }
+
+    @Override
     public void onClick(List<Step> steps, int position) {
-        phoneFragmentTransaction(steps, position);
+        if(DeviceUtils.isPhone){
+            phoneFragmentTransaction(steps, position);
+        } else {
+            tabletFragmentTransaction(steps, position);
+        }
     }
 
     //Setup recycler views

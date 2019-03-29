@@ -73,9 +73,6 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
 
-        //Set up the Tablet layout (Check for Tablet is inside utils function)
-        DeviceUtils.setUpTabletLayout(false);
-
         if(ConnectivityUtils.isOnline(getActivity().getApplicationContext())){
             //Kick off ViewModel if Device is connected to internet
             noConnectionText.setVisibility(View.INVISIBLE);
@@ -84,9 +81,6 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
             recyclerView.setVisibility(View.INVISIBLE);
             noConnectionText.setVisibility(View.VISIBLE);
         }
-
-
-
         return rootView;
     }
 
