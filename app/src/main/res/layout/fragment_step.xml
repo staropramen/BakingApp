@@ -70,7 +70,6 @@
 
         </FrameLayout>
 
-
         <TextView
             android:id="@+id/step_description"
             style="@style/StepDescription"

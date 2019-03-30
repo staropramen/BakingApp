@@ -2,21 +2,15 @@ package com.example.android.bakingapp.fragments;
 
 
 import android.databinding.DataBindingUtil;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.example.android.bakingapp.MainActivity;
 import com.example.android.bakingapp.R;
@@ -25,7 +19,6 @@ import com.example.android.bakingapp.model.Step;
 import com.example.android.bakingapp.utils.DeviceUtils;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -44,7 +37,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.net.URLConnection;
 import java.util.List;
 
@@ -204,7 +196,6 @@ public class StepFragment extends Fragment implements Player.EventListener {
             exoPlayer.prepare(mediaSource);
             exoPlayer.setPlayWhenReady(false);
         }
-
     }
 
     //Release Media Player
@@ -293,7 +284,6 @@ public class StepFragment extends Fragment implements Player.EventListener {
             mBinding.playerView.setVisibility(View.VISIBLE);
             mBinding.pbVideoLoading.setVisibility(View.INVISIBLE);
         }
-
     }
 
     @Override

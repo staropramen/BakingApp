@@ -1,8 +1,5 @@
 package com.example.android.bakingapp.utils;
 
-import android.content.Context;
-import android.preference.PreferenceManager;
-
 import com.example.android.bakingapp.MainActivity;
 import com.example.android.bakingapp.model.Recipe;
 import com.google.gson.Gson;

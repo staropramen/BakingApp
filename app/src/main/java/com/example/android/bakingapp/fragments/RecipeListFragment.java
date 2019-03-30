@@ -3,20 +3,16 @@ package com.example.android.bakingapp.fragments;
 
 import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +21,6 @@ import android.widget.TextView;
 import com.example.android.bakingapp.BakingWidgetProvider;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapter.RecipeListAdapter;
-import com.example.android.bakingapp.model.Ingredient;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.utils.ConnectivityUtils;
 import com.example.android.bakingapp.utils.DeviceUtils;
@@ -137,5 +132,4 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
 
         return columns;
     }
-
 }

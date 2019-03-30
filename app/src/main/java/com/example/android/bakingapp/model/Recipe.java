@@ -2,8 +2,6 @@ package com.example.android.bakingapp.model;
 
 import java.io.Serializable;
 import java.util.List;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 public class Recipe implements Serializable {
 
