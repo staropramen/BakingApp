@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -58,10 +59,14 @@ public class StepFragment extends Fragment implements Player.EventListener {
     private FragmentStepBinding mBinding;
     private String STEP_KEY = "step-key";
     private String POSITION_KEY = "position-key";
+    private String EXTRA_STEP = "extra-step";
+    private String EXTRA_ALL_STEPS = "extra-all-steps";
+    private String EXTRA_POSITION = "extra-position";
     private SimpleExoPlayer exoPlayer;
     private String EXO_VIDEO_PLAYER = "exoVideoPlayer";
     private List<Step> steps;
     private int position;
+    private Step step;
 
     //Boolean to check if the Player is initialized, default = false
     private boolean playerIsInitialized = false;
@@ -81,14 +86,22 @@ public class StepFragment extends Fragment implements Player.EventListener {
         //Get the Step
         Bundle data = getArguments();
         steps = (List<Step>) data.getSerializable(STEP_KEY);
-        position = data.getInt(POSITION_KEY);
-        Step step = steps.get(position);
+
+        if(savedInstanceState != null){
+            position = savedInstanceState.getInt(EXTRA_POSITION);
+            step = (Step) savedInstanceState.getSerializable(EXTRA_STEP);
+        } else {
+            position = data.getInt(POSITION_KEY);
+            step = steps.get(position);
+        }
 
         //Populate the UI
         if(DeviceUtils.isPhone && DeviceUtils.isLandscape()){
             populateUiLandscape(step);
         }else {
             populateUi(step);
+
+            //Setup Previous and next
             setVisibilityOfPreviousAndNext(position, steps);
 
             //Set onClick for previous and next
@@ -112,6 +125,13 @@ public class StepFragment extends Fragment implements Player.EventListener {
         return rootView;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(EXTRA_STEP, step);
+        outState.putInt(EXTRA_POSITION, position);
+    }
+
     //Release ExoPlayer if Fragment is paused
     @Override
     public void onPause() {
@@ -122,11 +142,13 @@ public class StepFragment extends Fragment implements Player.EventListener {
     @Override
     public void onResume() {
         super.onResume();
-        //If Phone and Landscape we hide the Actonabar and the Appbar Layout to have a Full Screen Video
+        //If Phone and Landscape we hide the Actionbar and the Appbar Layout to have a Full Screen Video
         if(DeviceUtils.isPhone && DeviceUtils.isLandscape()){
             ((MainActivity)getActivity()).getSupportActionBar().hide();
             MainActivity.appBar.setVisibility(View.GONE);
             mBinding.playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
+        } else {
+            mBinding.playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
         }
     }
 
@@ -227,14 +249,14 @@ public class StepFragment extends Fragment implements Player.EventListener {
     //Set the Button OnClick Actions
     private void nextStep(int position, List<Step> steps){
         releasePlayer();
-        Step step = steps.get(position);
+        step = steps.get(position);
         populateUi(step);
         setVisibilityOfPreviousAndNext(position, steps);
     }
 
     private void previousStep(int position, List<Step> steps){
         releasePlayer();
-        Step step = steps.get(position);
+        step = steps.get(position);
         populateUi(step);
         setVisibilityOfPreviousAndNext(position, steps);
     }

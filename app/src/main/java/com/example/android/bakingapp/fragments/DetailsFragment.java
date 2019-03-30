@@ -3,6 +3,7 @@ package com.example.android.bakingapp.fragments;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,7 +42,9 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
     private String RECIPE_KEY = "recipe-key";
     private String STEP_KEY = "step-key";
     private String POSITION_KEY = "position-key";
+    private String EXTRA_POSITION = "extra-position";
     private Recipe recipe;
+    private int stepPosition;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -74,21 +77,28 @@ public class DetailsFragment extends Fragment implements StepListAdapter.StepOnC
         setupRecyclerViews();
 
         //If Device is tablet, initial show Introduction step
-        if(!DeviceUtils.isPhone){
-            tabletFragmentTransaction(recipe.getSteps(), 0);
+        if(savedInstanceState != null){
+            stepPosition = savedInstanceState.getInt(EXTRA_POSITION);
+        }else {
+            stepPosition = 0;
+            if(!DeviceUtils.isPhone){
+                tabletFragmentTransaction(recipe.getSteps(), stepPosition);
+            }
         }
+
 
         return rootView;
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Log.d(TAG, "CONFIG CHANGE");
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(EXTRA_POSITION, stepPosition);
     }
 
     @Override
     public void onClick(List<Step> steps, int position) {
+        stepPosition = position;
         if(DeviceUtils.isPhone){
             phoneFragmentTransaction(steps, position);
         } else {
